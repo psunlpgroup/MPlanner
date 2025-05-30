@@ -195,28 +195,6 @@ The system includes comprehensive validation:
 
 2. Register it in the backbone map and update configuration.
 
-## 📈 Performance Tips
-
-1. **Batch Processing**: Process in smaller batches for better memory management
-2. **GPU Memory**: Monitor CUDA memory usage with large models
-3. **API Limits**: Be aware of rate limits for external APIs
-4. **Storage**: Ensure sufficient disk space for generated images
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## 📞 Support
-
-For issues and questions:
-- Check the troubleshooting section
-- Review error logs in the output
-- Submit an issue with detailed information
