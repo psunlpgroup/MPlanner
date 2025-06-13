@@ -44,16 +44,16 @@ This repository includes code and materials for the ACL2025-Findings paper "Enha
 ### Basic Usage
 
 ```bash
-python planner.py --mode passage --backbone gpt4o --model gpt-4o --save_dir ./results
+python planner.py --mode vanilla --backbone gpt4o --model gpt-4o --save_dir ./results
 ```
 
 ### Advanced Usage
 
 ```bash
 python planner.py \
-  --mode step_tip \
+  --mode tip \
   --backbone gem \
-  --model gemini-pro \
+  --model gemini-1.5-flash \
   --data_dir ./dataset/tasks.csv \
   --save_dir ./results \
   --start_idx 0 \
@@ -76,21 +76,19 @@ python planner.py \
 
 - **Dry run** (show what would be processed):
   ```bash
-  python planner.py --dry_run --mode passage --backbone gpt4o --save_dir ./results
+  python planner.py --dry_run --mode vanilla --backbone gpt4o --save_dir ./results
   ```
 
 ## 🎯 Processing Modes
 
 | Mode | Description |
 |------|-------------|
-| `passage` | Generate complete plan first, then create images |
-| `step` | Generate plan step-by-step interactively |
-| `passage_tip` | Passage mode with tip-based image generation |
-| `step_tip` | Step mode with tip-based enhancement |
-| `passage_w_des` | Passage mode with detailed image descriptions |
-| `step_w_des` | Step mode with detailed descriptions |
-| `pure_img` | Generate only images for steps |
-| `img_2_text` | Convert existing images to text descriptions |
+| `vanilla` | Generate textual plan first, then create visual plan |
+| `stable` | Generate visual plan first, then create texual plan |
+| `tip` | TIP-based image generation and revision |
+| `w_des` | Textual plan refinement with detailed image descriptions |
+| `w_img` | Textual plan refinement with visual interpretation |
+| `ours` | Ours approach with pPDDL visual information and coherent image generation |
 
 ## 🤖 Supported Backbones
 
@@ -99,12 +97,11 @@ python planner.py \
 - Requires: `OPENAI_API_KEY`
 
 ### Gemini
-- Models: `gemini-pro`, `gemini-pro-vision`
+- Models: `gemini-1.5-flash`
 - Requires: `GOOGLE_API_KEY`
 
 ### Mistral
 - Models: `mistral-7b`, `mistral-8x7b`
-- Status: Implementation in progress
 
 ## 📊 Output Structure
 
@@ -121,79 +118,6 @@ results/
     ├── step_2.png
     └── ...
 ```
-
-## 🔧 Configuration
-
-### Command Line Arguments
-
-| Argument | Description | Default |
-|----------|-------------|---------|
-| `--backbone` | Model backbone (gpt4o/gem/mistral) | `gpt4o` |
-| `--model` | Specific model name | `gpt-4o` |
-| `--mode` | Processing mode | Required |
-| `--temperature` | Sampling temperature | `0.1` |
-| `--seed` | Random seed | `42` |
-| `--start_idx` | Starting task index | `0` |
-| `--end_idx` | Ending task index | `100` |
-| `--data_dir` | Dataset file path | `./dataset/wikiHow_tasks_merge.csv` |
-| `--save_dir` | Output directory | Required |
-
-### Environment Variables
-
-| Variable | Description |
-|----------|-------------|
-| `OPENAI_API_KEY` | OpenAI API key for GPT models |
-| `GOOGLE_API_KEY` | Google API key for Gemini models |
-| `CUDA_VISIBLE_DEVICES` | GPU device selection |
-
-## 🔍 Validation and Testing
-
-The system includes comprehensive validation:
-
-1. **Configuration Validation**:
-   - Model compatibility checking
-   - File path validation
-   - Parameter range validation
-
-2. **Connectivity Testing**:
-   - API key validation
-   - Model response testing
-   - Dataset accessibility
-
-3. **Runtime Monitoring**:
-   - Progress tracking
-   - Error logging
-   - Success rate reporting
-
-
-## 🚧 Extending the System
-
-### Adding New Processors
-
-1. Create a new processor class in `processors.py`:
-   ```python
-   class CustomProcessor(TaskProcessor):
-       def _process_task_impl(self, task: str, task_path: str) -> bool:
-           # Your implementation here
-           return True
-   ```
-
-2. Register it in `pipeline.py`:
-   ```python
-   processors['custom_mode'] = CustomProcessor(self.model_manager)
-   ```
-
-### Adding New Backbones
-
-1. Implement the backbone interface in `models.py`:
-   ```python
-   class CustomBackbone(BackboneInterface):
-       def get_text_response(self, prompt, seed, temperature):
-           # Your implementation
-           pass
-   ```
-
-2. Register it in the backbone map and update configuration.
 
 ## 📄 License
 
